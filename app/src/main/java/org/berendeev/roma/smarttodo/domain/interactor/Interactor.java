@@ -1,55 +1,36 @@
 package org.berendeev.roma.smarttodo.domain.interactor;
 
+import java.util.concurrent.ThreadPoolExecutor;
 
-public abstract class Interactor<T, P> {
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
-    private InteractorExecutor requestExecutor;
-    private InteractorExecutor responseExecutor;
+public abstract class Interactor<T, Param> {
 
-    public Interactor(InteractorExecutor requestExecutor, InteractorExecutor responseExecutor) {
-        this.requestExecutor = requestExecutor;
-        this.responseExecutor = responseExecutor;
+    private ThreadPoolExecutor workExecutor;
+    private Scheduler mainExecutor;
+    private CompositeDisposable disposable;
+
+    public Interactor(ThreadPoolExecutor workExecutor, Scheduler mainExecutor) {
+        this.workExecutor = workExecutor;
+        this.mainExecutor = mainExecutor;
+        disposable = new CompositeDisposable();
     }
 
-    public void executeInteractor(final T requestValue, final Callback<P> callback) {
-        requestExecutor.execute(new Runnable() {
-            @Override public void run() {
-                operation(requestValue, new InteractorCallback<P>(callback, responseExecutor));
-            }
-        });
+    public void execute(DisposableObserver<T> observer, Param param){
+        disposable.add(
+                buildObservable(param)
+                .subscribeOn(Schedulers.from(workExecutor))
+                .observeOn(mainExecutor)
+                .subscribeWith(observer));
     }
 
-    protected abstract void operation(T requestValue, Callback<P> callback);
+    protected abstract Observable<T> buildObservable(Param param);
 
-    public interface Callback<P> {
-        void onSuccess(P responseValue);
-
-        void onError(Throwable t);
+    public void dispose(){
+        disposable.clear();
     }
-
-    private static class InteractorCallback<P> implements Callback<P> {
-        private Callback<P> callback;
-        private InteractorExecutor executor;
-
-        public InteractorCallback(Callback<P> callback, InteractorExecutor executor) {
-            this.callback = callback;
-            this.executor = executor;
-        }
-
-        public void onSuccess(final P response) {
-            executor.execute(new Runnable() {
-                @Override public void run() {
-                    callback.onSuccess(response);
-                }
-            });
-        }
-
-            @Override public void onError (final Throwable t){
-                executor.execute(new Runnable() {
-                    @Override public void run() {
-                        callback.onError(t);
-                    }
-                });
-            }
-        }
-    }
+}

@@ -2,23 +2,25 @@ package org.berendeev.roma.smarttodo.domain.model;
 
 import com.google.auto.value.AutoValue;
 
+import java.util.List;
+
 @AutoValue
-public abstract class ToDoCategory {
+abstract public class PurchasingList {
     public abstract int id();
-    public abstract String name();
+    public abstract List<Product> list();
 
     public abstract Builder toBuilder();
 
     public static Builder builder() {
-        return new AutoValue_ToDoCategory.Builder();
+        return new AutoValue_PurchasingList.Builder();
     }
 
 
     @AutoValue.Builder public abstract static class Builder {
         public abstract Builder id(int id);
 
-        public abstract Builder name(String name);
+        public abstract Builder list(List<Product> list);
 
-        public abstract ToDoCategory build();
+        public abstract PurchasingList build();
     }
 }
