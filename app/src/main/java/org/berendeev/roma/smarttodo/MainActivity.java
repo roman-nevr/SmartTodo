@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import io.reactivex.Observable;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
@@ -49,6 +51,18 @@ public class MainActivity extends AppCompatActivity {
                 v.animate().setDuration(1000).rotation(90).alpha(0);
             }
         });
+
+        try {
+            Observable<Integer> observable = Observable.just(1 ,2 ,3);
+            observable
+                    .subscribe(integer -> {
+                        int a = integer / 0;
+                    });
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
+        System.out.println(1);
+
     }
 
 }

@@ -2,35 +2,25 @@ package org.berendeev.roma.smarttodo.domain.interactor;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class Interactor<T, Param> {
+public abstract class Interactor<Response, Request> {
 
-    private ThreadPoolExecutor workExecutor;
-    private Scheduler mainExecutor;
-    private CompositeDisposable disposable;
+    @Inject ThreadPoolExecutor workExecutor;
+    @Inject Scheduler mainExecutor;
 
-    public Interactor(ThreadPoolExecutor workExecutor, Scheduler mainExecutor) {
-        this.workExecutor = workExecutor;
-        this.mainExecutor = mainExecutor;
-        disposable = new CompositeDisposable();
-    }
-
-    public void execute(DisposableObserver<T> observer, Param param){
-        disposable.add(
-                buildObservable(param)
+    public Disposable execute(DisposableObserver<Response> observer, Request param) {
+        return buildObservable(param)
                 .subscribeOn(Schedulers.from(workExecutor))
                 .observeOn(mainExecutor)
-                .subscribeWith(observer));
+                .subscribeWith(observer);
     }
 
-    protected abstract Observable<T> buildObservable(Param param);
-
-    public void dispose(){
-        disposable.clear();
-    }
+    protected abstract Observable<Response> buildObservable(Request param);
 }
