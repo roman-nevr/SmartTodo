@@ -15,6 +15,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Module
 public class MainModule {
@@ -57,5 +59,10 @@ public class MainModule {
         int timeout = 30;
         return new ThreadPoolExecutor(poolSize, maxPoolSize, timeout,
                 TimeUnit.SECONDS, new ArrayBlockingQueue<>(poolSize));
+    }
+
+    @Singleton
+    @Provides Scheduler provideScheduler(){
+        return AndroidSchedulers.mainThread();
     }
 }

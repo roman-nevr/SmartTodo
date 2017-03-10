@@ -11,6 +11,9 @@ public class SaveTodoInteractor extends Interactor<Void, ToDo> {
 
     @Inject Repository repository;
 
+    @Inject
+    public SaveTodoInteractor() {}
+
     @Override protected Observable<Void> buildObservable(ToDo param) {
         return repository.saveToDo(param);
     }

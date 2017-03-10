@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface ToDoListView {
     void showToDos(List<ToDo> toDos);
+
+    interface Router{
+        void moveToToDoDetails(int id);
+    }
 }

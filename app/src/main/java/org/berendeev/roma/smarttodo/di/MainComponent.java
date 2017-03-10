@@ -10,7 +10,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = MainModule.class)
 public interface MainComponent {
-    Repository provideRepository();
 
     void inject(ToDoListActivity activity);
+    ToDoDetailsComponent plusToDoDetailsComponent();
 }

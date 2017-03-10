@@ -13,6 +13,9 @@ public class GetAllToDosWithoutCategory extends Interactor<List<ToDo>, Void> {
 
     @Inject Repository repository;
 
+    @Inject
+    public GetAllToDosWithoutCategory() {}
+
     @Override protected Observable<List<ToDo>> buildObservable(Void param) {
         return repository.getAllFromCategory(0);
     }

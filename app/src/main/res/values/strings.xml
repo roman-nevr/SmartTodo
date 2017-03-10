@@ -3,4 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="todo_title_hint">ToDo name</string>
+    <string name="description_hint">Input description here...</string>
 </resources>

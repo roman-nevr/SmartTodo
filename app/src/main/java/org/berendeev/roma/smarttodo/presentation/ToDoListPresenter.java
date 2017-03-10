@@ -16,6 +16,9 @@ public class ToDoListPresenter {
     @Inject GetAllToDosWithoutCategory getAllToDosWithoutCategory;
     private final CompositeDisposable disposable;
 
+    private ToDoListView view;
+    private ToDoListView.Router router;
+
     @Inject
     public ToDoListPresenter() {
         disposable = new CompositeDisposable();
@@ -39,5 +42,17 @@ public class ToDoListPresenter {
 
     public void stop(){
         disposable.clear();
+    }
+
+    public void onToDoClick(int id) {
+        router.moveToToDoDetails(id);
+    }
+
+    public void setView(ToDoListView view) {
+        this.view = view;
+    }
+
+    public void setRouter(ToDoListView.Router router) {
+        this.router = router;
     }
 }

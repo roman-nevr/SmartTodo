@@ -11,6 +11,9 @@ public class GetToDoInteractor extends Interactor<ToDo, Integer> {
 
     @Inject Repository repository;
 
+    @Inject
+    public GetToDoInteractor() {}
+
     @Override protected Observable<ToDo> buildObservable(Integer param) {
         return repository.getTodo(param);
     }
