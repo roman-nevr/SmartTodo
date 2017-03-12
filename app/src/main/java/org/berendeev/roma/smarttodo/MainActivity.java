@@ -3,10 +3,16 @@ package org.berendeev.roma.smarttodo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import io.reactivex.Observable;
@@ -46,23 +52,19 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                v.animate().setDuration(1000).rotation(90).alpha(0);
-            }
-        });
-
-        try {
-            Observable<Integer> observable = Observable.just(1 ,2 ,3);
-            observable
-                    .subscribe(integer -> {
-                        int a = integer / 0;
-                    });
-        }catch (Throwable t){
-            t.printStackTrace();
-        }
-        System.out.println(1);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
 
     }
 
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.navigation, menu);
+        inflater.inflate(R.menu.main_menu, menu); // inflate the menu
+        Spinner s = (Spinner) menu.findItem(R.id.spinner).getActionView(); // find the spinner
+        ArrayAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.my_menu_spinner_list, android.R.layout.simple_spinner_dropdown_item); //  create the adapter from a StringArray
+        s.setAdapter(mSpinnerAdapter); // set the adapter
+//        s.setOnItemSelectedListener(myChangeListener); // (optional) reference to a OnItemSelectedListener, that you can use to perform actions based on user selection
+        return true;
+    }
 }

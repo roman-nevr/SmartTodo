@@ -55,6 +55,11 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyItemInserted(visibleTodos.size() - 1);
     }
 
+    public void update(List<ToDo> toDos){
+        visibleTodos = toDos;
+        notifyDataSetChanged();;
+    }
+
 
     public class ToDoHeadViewHolder extends RecyclerView.ViewHolder{
 
@@ -70,7 +75,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public ToDoViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
             todoName.setOnClickListener(v -> {
                 presenter.onToDoClick(id);
             });

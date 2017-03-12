@@ -29,8 +29,8 @@ public class MainModule {
 
     @Singleton
     @Provides
-    Repository provideRepository(){
-        return new RepositoryImpl();
+    Repository provideRepository(SQLiteDatasource datasource){
+        return new RepositoryImpl(datasource);
     }
 
     @Singleton

@@ -11,6 +11,7 @@ import io.reactivex.Observable;
 
 public interface Repository {
     Observable<Void> saveToDo(ToDo toDo);
+    Observable<Void> updateToDo(ToDo toDo);
     Observable<ToDo> getTodo(int id);
     Observable<List<ToDo>> getAllFromCategory(int categoryId);
 

@@ -11,6 +11,6 @@ import dagger.Component;
 @Component(modules = MainModule.class)
 public interface MainComponent {
 
-    void inject(ToDoListActivity activity);
+    ToDoListComponent plusToDoListComponent();
     ToDoDetailsComponent plusToDoDetailsComponent();
 }

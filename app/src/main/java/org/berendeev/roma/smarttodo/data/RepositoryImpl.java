@@ -16,10 +16,18 @@ import io.reactivex.Observable;
 
 public class RepositoryImpl implements Repository {
 
-    @Inject  SQLiteDatasource sqLiteDatasource;
+    private SQLiteDatasource sqLiteDatasource;
+
+    public RepositoryImpl(SQLiteDatasource sqLiteDatasource) {
+        this.sqLiteDatasource = sqLiteDatasource;
+    }
 
     @Override public Observable<Void> saveToDo(ToDo toDo) {
         return sqLiteDatasource.saveToDo(toDo);
+    }
+
+    @Override public Observable<Void> updateToDo(ToDo toDo) {
+        return sqLiteDatasource.updateToDo(toDo);
     }
 
     @Override public Observable<ToDo> getTodo(int id) {
@@ -27,11 +35,11 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override public Observable<List<ToDo>> getAllFromCategory(int categoryId) {
-        return null;
+        return sqLiteDatasource.getAllFromCategory(categoryId);
     }
 
     @Override public Observable<Void> saveCategory(ToDoCategory category) {
-        return null;
+        return sqLiteDatasource.saveCategory(category);
     }
 
     @Override public Observable<ToDoCategory> getCategory(int id) {

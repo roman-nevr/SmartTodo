@@ -7,7 +7,10 @@ import java.util.List;
 public interface ToDoListView {
     void showToDos(List<ToDo> toDos);
 
+    void showError();
+
     interface Router{
         void moveToToDoDetails(int id);
+        void moveToAddNewToDo();
     }
 }

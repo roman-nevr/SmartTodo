@@ -5,4 +5,13 @@ import org.berendeev.roma.smarttodo.domain.model.ToDo;
 public interface ToDoDetailsView {
     void fillView(ToDo toDo);
 
+    void showError();
+
+    String getName();
+
+    String getDescription();
+
+    interface Router{
+
+    }
 }

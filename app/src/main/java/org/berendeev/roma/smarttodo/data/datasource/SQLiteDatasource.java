@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import timber.log.Timber;
 
 import static android.provider.BaseColumns._ID;
 import static org.berendeev.roma.smarttodo.data.datasource.DatabaseOpenHelper.CATEGORY_ID;
@@ -36,13 +37,28 @@ public class SQLiteDatasource implements Datasource {
 
     @Override public Observable<Void> saveToDo(ToDo toDo) {
         contentValues.clear();
-        contentValues.put(_ID, toDo.id());
+//        contentValues.put(_ID, toDo.id());
         contentValues.put(NAME, toDo.name());
         contentValues.put(DESCRIPTION, toDo.description());
         contentValues.put(CATEGORY_ID, toDo.categoryId());
         long rowId = database.insert(DATABASE_TABLE, null, contentValues);
         if(rowId == -1){
             return Observable.error(new SQLException("can't save"));
+        }
+        return Observable.empty();
+    }
+
+    @Override public Observable<Void> updateToDo(ToDo toDo) {
+        contentValues.clear();
+        contentValues.put(NAME, toDo.name());
+        contentValues.put(DESCRIPTION, toDo.description());
+        contentValues.put(CATEGORY_ID, toDo.categoryId());
+//        int updCount = db.update("mytable", cv, "id = ?", new String[] { id });
+        String selection = _ID + " = ?";
+        String[] selectionArgs = {"" + toDo.id()};
+        int count = database.update(DATABASE_TABLE, contentValues, selection, selectionArgs);
+        if(count > 1){
+            Timber.wtf("=======>  insert error, count > 1");
         }
         return Observable.empty();
     }

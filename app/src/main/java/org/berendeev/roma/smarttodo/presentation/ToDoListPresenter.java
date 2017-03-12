@@ -27,11 +27,11 @@ public class ToDoListPresenter {
     public void start(){
         getAllToDosWithoutCategory.execute(new DisposableObserver<List<ToDo>>() {
             @Override public void onNext(List<ToDo> toDos) {
-
+                view.showToDos(toDos);
             }
 
             @Override public void onError(Throwable e) {
-
+                view.showError();
             }
 
             @Override public void onComplete() {
@@ -46,6 +46,10 @@ public class ToDoListPresenter {
 
     public void onToDoClick(int id) {
         router.moveToToDoDetails(id);
+    }
+
+    public void onAddButtonClick(){
+        router.moveToAddNewToDo();
     }
 
     public void setView(ToDoListView view) {

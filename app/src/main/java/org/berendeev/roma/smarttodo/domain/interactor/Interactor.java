@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -15,11 +16,17 @@ public abstract class Interactor<Response, Request> {
     @Inject ThreadPoolExecutor workExecutor;
     @Inject Scheduler mainExecutor;
 
-    public Disposable execute(DisposableObserver<Response> observer, Request param) {
-        return buildObservable(param)
+    CompositeDisposable disposable = new CompositeDisposable();
+
+    public void execute(DisposableObserver<Response> observer, Request param) {
+        Observable<Response> observable = buildObservable(param)
                 .subscribeOn(Schedulers.from(workExecutor))
-                .observeOn(mainExecutor)
-                .subscribeWith(observer);
+                .observeOn(mainExecutor);
+        disposable.add(observable.subscribeWith(observer));
+    }
+
+    public void dispose(){
+        disposable.clear();
     }
 
     protected abstract Observable<Response> buildObservable(Request param);
