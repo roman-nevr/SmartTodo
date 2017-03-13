@@ -9,12 +9,11 @@
 
     <TextView
         android:id="@+id/todo_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/todo_padding"
-        android:layout_weight="1"
-        android:textStyle="bold"
+        style="@style/ToDoItemStyle"
         tools:text="Todo name"
         />
 

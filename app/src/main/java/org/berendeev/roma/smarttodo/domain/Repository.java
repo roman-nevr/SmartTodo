@@ -7,21 +7,23 @@ import org.berendeev.roma.smarttodo.domain.model.ToDoCategory;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public interface Repository {
-    Observable<Void> saveToDo(ToDo toDo);
-    Observable<Void> updateToDo(ToDo toDo);
+    Completable saveToDo(ToDo toDo);
+    Completable updateToDo(ToDo toDo);
     Observable<ToDo> getTodo(int id);
     Observable<List<ToDo>> getAllFromCategory(int categoryId);
 
-    Observable<Void> saveCategory(ToDoCategory category);
+    Completable saveCategory(ToDoCategory category);
+    Completable updateCategory(ToDoCategory category);
     Observable<ToDoCategory> getCategory(int id);
     Observable<List<ToDoCategory>> getAllCategories();
 
-    Observable<Void> saveProduct(Product product);
+    Completable saveProduct(Product product);
     Observable<List<String>> findProducts(String nameSnippet);
 
-    Observable<Void> savePurchasingList(PurchasingList list);
+    Completable savePurchasingList(PurchasingList list);
     Observable<List<PurchasingList>> getAllPurchasingLists();
 }

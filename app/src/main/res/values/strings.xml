@@ -6,4 +6,6 @@
     <string name="todo_title_hint">ToDo name</string>
     <string name="description_hint">Input description here...</string>
     <string name="todo_list_loading_error">Error occurs while todos loading</string>
+
+    <string name="default_category_name">General</string>
 </resources>

@@ -9,8 +9,7 @@ import org.berendeev.roma.smarttodo.domain.model.ToDoCategory;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 
@@ -22,11 +21,11 @@ public class RepositoryImpl implements Repository {
         this.sqLiteDatasource = sqLiteDatasource;
     }
 
-    @Override public Observable<Void> saveToDo(ToDo toDo) {
+    @Override public Completable saveToDo(ToDo toDo) {
         return sqLiteDatasource.saveToDo(toDo);
     }
 
-    @Override public Observable<Void> updateToDo(ToDo toDo) {
+    @Override public Completable updateToDo(ToDo toDo) {
         return sqLiteDatasource.updateToDo(toDo);
     }
 
@@ -38,8 +37,12 @@ public class RepositoryImpl implements Repository {
         return sqLiteDatasource.getAllFromCategory(categoryId);
     }
 
-    @Override public Observable<Void> saveCategory(ToDoCategory category) {
+    @Override public Completable saveCategory(ToDoCategory category) {
         return sqLiteDatasource.saveCategory(category);
+    }
+
+    @Override public Completable updateCategory(ToDoCategory category) {
+        return sqLiteDatasource.updateCategory(category);
     }
 
     @Override public Observable<ToDoCategory> getCategory(int id) {
@@ -50,7 +53,7 @@ public class RepositoryImpl implements Repository {
         return null;
     }
 
-    @Override public Observable<Void> saveProduct(Product product) {
+    @Override public Completable saveProduct(Product product) {
         return null;
     }
 
@@ -58,7 +61,7 @@ public class RepositoryImpl implements Repository {
         return null;
     }
 
-    @Override public Observable<Void> savePurchasingList(PurchasingList list) {
+    @Override public Completable savePurchasingList(PurchasingList list) {
         return null;
     }
 

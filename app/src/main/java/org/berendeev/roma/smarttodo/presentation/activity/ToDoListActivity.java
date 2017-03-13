@@ -83,11 +83,12 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
         }else {
             adapter.update(toDos);
         }
+        showError();
     }
 
     @Override public void showError() {
         recyclerView.setVisibility(View.INVISIBLE);
-        addToDo.setVisibility(View.GONE);
+        //addToDo.setVisibility(View.GONE);
         noToDos.setVisibility(View.VISIBLE);
         Snackbar.make(noToDos, R.string.todo_list_loading_error, Snackbar.LENGTH_INDEFINITE).show();
     }

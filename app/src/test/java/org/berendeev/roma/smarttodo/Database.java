@@ -3,6 +3,8 @@ package org.berendeev.roma.smarttodo;
 import org.berendeev.roma.smarttodo.data.datasource.DatabaseOpenHelper;
 import org.berendeev.roma.smarttodo.data.datasource.SQLiteDatasource;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
+import org.berendeev.roma.smarttodo.domain.model.ToDoCategory;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,12 +30,12 @@ public class Database {
     }
 
     @Test
-    public void readWriteTest(){
+    public void readWriteToDoTest(){
         ToDo toDo = generateToDo(1, 0);
         dataSource.saveToDo(toDo);
         dataSource.getTodo(1).subscribe(toDo1 -> {
             Assert.assertTrue(toDo.equals(toDo1));
-            System.out.println("readWriteTest complete");
+            System.out.println("readWriteToDoTest complete");
         });
     }
 
@@ -53,6 +55,17 @@ public class Database {
                 });
     }
 
+    @Test
+    public void readWriteCategoryTest(){
+        ToDoCategory category = generateCategory(1);
+        dataSource.saveCategory(category);
+        dataSource.getCategory(1).subscribe(category1 -> {
+            Assert.assertTrue(category.equals(category1));
+            System.out.println("readWriteCategoryTest complete");
+        });
+
+    }
+
     private ToDo generateToDo(int id, int category){
         return ToDo.builder()
                 .id(id)
@@ -60,5 +73,18 @@ public class Database {
                 .description("desc " + id)
                 .categoryId(category)
                 .build();
+    }
+
+    private ToDoCategory generateCategory(int id){
+        return ToDoCategory.builder()
+                .id(id)
+                .name("Category " + id)
+                .isExpanded(true)
+                .build();
+    }
+
+    @After
+    public void waitAfter(){
+
     }
 }

@@ -8,4 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ToDoHeadStyle">
+        <item name="android:textSize">22dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ToDoItemStyle" parent="ToDoHeadStyle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
 </resources>

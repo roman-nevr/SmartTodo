@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,13 +11,14 @@
 
     <TextView
         android:id="@+id/item_header_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/todo_head_padding"
-        android:layout_weight="1"
-        android:textStyle="bold"
-        tools:text="Group Name"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/item_arrow"
+        android:layout_toStartOf="@+id/item_arrow"
+        style="@style/ToDoHeadStyle"
+        tools:text="Loris Ipsum Loris Ipsum Loris Ipsum"
         />
 
     <ImageView
@@ -25,6 +26,11 @@
         android:layout_width="@dimen/arrow_size"
         android:layout_height="@dimen/arrow_size"
         android:layout_gravity="center_vertical"
-        app:srcCompat="@drawable/ic_keyboard_arrow_right_black_36dp"/>
+        app:srcCompat="@drawable/ic_keyboard_arrow_right_black_36dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        tools:visibility="visible"
+        />
 
-</LinearLayout>
+</RelativeLayout>
