@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    >
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textInputLayout"
+        >
+
+        <EditText
+            style="@style/ToDoHeadStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:maxLines="1"
+            android:gravity="center"
+            android:id="@+id/category_name"
+            tools:text="Name"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textInputLayout"
+        android:layout_marginTop="22dp"
+        android:layout_toLeftOf="@+id/divider"
+        android:layout_toStartOf="@+id/divider"
+        tools:text="@string/cancel_button_label"
+        />
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/cancel"
+        android:layout_alignBottom="@+id/cancel"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        tools:text="@string/create_button_label"
+        android:layout_toRightOf="@+id/divider"
+        android:layout_toEndOf="@+id/divider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/divider"/>
+
+
+</RelativeLayout>

@@ -8,14 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-
-import io.reactivex.Observable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.navigation, menu);
-        inflater.inflate(R.menu.main_menu, menu); // inflate the menu
+        inflater.inflate(R.menu.spinner_menu, menu); // inflate the menu
         Spinner s = (Spinner) menu.findItem(R.id.spinner).getActionView(); // find the spinner
         ArrayAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.my_menu_spinner_list, android.R.layout.simple_spinner_dropdown_item); //  create the adapter from a StringArray
         s.setAdapter(mSpinnerAdapter); // set the adapter

@@ -12,6 +12,6 @@ public interface ToDoDetailsView {
     String getDescription();
 
     interface Router{
-
+        void moveToToDoList();
     }
 }

@@ -7,5 +7,12 @@
     <string name="description_hint">Input description here...</string>
     <string name="todo_list_loading_error">Error occurs while todos loading</string>
 
+    <!--  -->
     <string name="default_category_name">General</string>
+    <string name="create_new_category">Create new category</string>
+    <string name="clear_done_todos">Clear done tasks</string>
+    <!--  -->
+    <string name="cancel_button_label">Cancel</string>
+    <string name="create_button_label">Create</string>
+    <string name="rename_button">Rename</string>
 </resources>

@@ -12,7 +12,7 @@ import android.widget.EditText;
 import org.berendeev.roma.smarttodo.R;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
 import org.berendeev.roma.smarttodo.presentation.App;
-import org.berendeev.roma.smarttodo.presentation.ToDoDetailsPresenter;
+import org.berendeev.roma.smarttodo.presentation.presenter.ToDoDetailsPresenter;
 import org.berendeev.roma.smarttodo.presentation.ToDoDetailsView;
 
 import javax.inject.Inject;
@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetailsView {
+public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetailsView, ToDoDetailsView.Router {
 
     public static final String ID = "id";
     @BindView(R.id.todo_name) EditText etToDoName;
@@ -90,5 +90,9 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
 
     private int getIdFromIntent(){
         return getIntent().getIntExtra(ID, -1);
+    }
+
+    @Override public void moveToToDoList() {
+        finish();
     }
 }

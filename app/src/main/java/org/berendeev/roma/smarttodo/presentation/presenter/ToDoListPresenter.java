@@ -1,8 +1,9 @@
-package org.berendeev.roma.smarttodo.presentation;
+package org.berendeev.roma.smarttodo.presentation.presenter;
 
 import org.berendeev.roma.smarttodo.domain.interactor.GetAllToDosWithoutCategory;
 import org.berendeev.roma.smarttodo.domain.interactor.GetToDoInteractor;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
+import org.berendeev.roma.smarttodo.presentation.ToDoListView;
 
 import java.util.List;
 
@@ -58,5 +59,13 @@ public class ToDoListPresenter {
 
     public void setRouter(ToDoListView.Router router) {
         this.router = router;
+    }
+
+    public void onCreateCategoryClick() {
+
+    }
+
+    public void clearDoneTasks() {
+
     }
 }

@@ -8,13 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import org.berendeev.roma.smarttodo.R;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
 import org.berendeev.roma.smarttodo.presentation.App;
-import org.berendeev.roma.smarttodo.presentation.ToDoListPresenter;
+import org.berendeev.roma.smarttodo.presentation.presenter.ToDoListPresenter;
 import org.berendeev.roma.smarttodo.presentation.ToDoListView;
 import org.berendeev.roma.smarttodo.presentation.adapter.ToDoListAdapter;
 
@@ -83,14 +86,13 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
         }else {
             adapter.update(toDos);
         }
-        showError();
     }
 
     @Override public void showError() {
         recyclerView.setVisibility(View.INVISIBLE);
-        //addToDo.setVisibility(View.GONE);
+        addToDo.setVisibility(View.GONE);
         noToDos.setVisibility(View.VISIBLE);
-        Snackbar.make(noToDos, R.string.todo_list_loading_error, Snackbar.LENGTH_INDEFINITE).show();
+        Snackbar.make(recyclerView, R.string.todo_list_loading_error, Snackbar.LENGTH_INDEFINITE).show();
     }
 
     @Override public void moveToToDoDetails(int id) {
@@ -99,5 +101,28 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
 
     @Override public void moveToAddNewToDo() {
         ToDoDetailsActivity.start(this);
+    }
+
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.todo_menu, menu);
+        return true;
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId){
+            case R.id.create_new_category:{
+                presenter.onCreateCategoryClick();
+                break;
+            }
+            case R.id.clear_done_tasks:{
+                presenter.clearDoneTasks();
+                break;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

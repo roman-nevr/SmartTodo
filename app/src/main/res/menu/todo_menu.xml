@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/create_new_category"
+          app:showAsAction="ifRoom"
+          android:icon="@drawable/ic_create_new_folder_black"
+          android:id="@+id/create_new_category"
+        />
+    <item android:title="@string/clear_done_todos"
+          app:showAsAction="ifRoom"
+          android:icon="@drawable/ic_delete_black"
+          android:id="@+id/clear_done_tasks"
+        />
+</menu>

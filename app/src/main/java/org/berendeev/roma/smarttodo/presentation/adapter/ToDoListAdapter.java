@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import org.berendeev.roma.smarttodo.R;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
-import org.berendeev.roma.smarttodo.presentation.ToDoListPresenter;
+import org.berendeev.roma.smarttodo.presentation.presenter.ToDoListPresenter;
 
 import java.util.List;
 

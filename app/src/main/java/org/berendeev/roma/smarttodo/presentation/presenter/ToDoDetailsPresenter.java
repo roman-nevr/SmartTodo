@@ -1,8 +1,9 @@
-package org.berendeev.roma.smarttodo.presentation;
+package org.berendeev.roma.smarttodo.presentation.presenter;
 
 import org.berendeev.roma.smarttodo.domain.interactor.GetToDoInteractor;
 import org.berendeev.roma.smarttodo.domain.interactor.SaveTodoInteractor;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
+import org.berendeev.roma.smarttodo.presentation.ToDoDetailsView;
 
 import javax.inject.Inject;
 
@@ -40,6 +41,7 @@ public class ToDoDetailsPresenter {
                 .id(0)
                 .build();
         saveTodoInteractor.execute(new SaveToDoObservable(), toDo);
+        router.moveToToDoList();
     }
 
     public void setView(ToDoDetailsView view) {

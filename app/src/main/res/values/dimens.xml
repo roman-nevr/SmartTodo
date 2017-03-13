@@ -7,6 +7,6 @@
     <dimen name="arrow_size">32dp</dimen>
     <dimen name="standard_padding_small">4dp</dimen>
     <dimen name="todo_head_padding">8dp</dimen>
-    <dimen name="todo_padding">32dp</dimen>
+    <dimen name="todo_padding">8dp</dimen>
     <dimen name="standard_padding_large">16dp</dimen>
 </resources>
