@@ -72,6 +72,7 @@ public class Database {
                 .name("test " + id)
                 .description("desc " + id)
                 .categoryId(category)
+                .isChecked(true)
                 .build();
     }
 

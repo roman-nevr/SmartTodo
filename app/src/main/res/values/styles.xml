@@ -20,4 +20,9 @@
         <item name="android:maxLines">2</item>
     </style>
 
+    <style name="CategoryDialogButtonTheme" parent="?android:attr/borderlessButtonStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">25dp</item>
+    </style>
+
 </resources>

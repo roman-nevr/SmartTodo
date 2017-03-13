@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import org.berendeev.roma.smarttodo.R;
@@ -38,6 +40,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private void bindToDoViewHolder(ToDoViewHolder holder, int position) {
         holder.todoName.setText(visibleTodos.get(position).name());
         holder.id = visibleTodos.get(position).id();
+        holder.todoCheckBox.setChecked(visibleTodos.get(position).isChecked());
     }
 
     @Override public int getItemCount() {
@@ -71,7 +74,9 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class ToDoViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.todo_name) TextView todoName;
+        @BindView(R.id.todo_checkbox) CheckBox todoCheckBox;
         int id;
+        boolean isChecked;
 
         public ToDoViewHolder(View itemView) {
             super(itemView);
@@ -79,6 +84,10 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             todoName.setOnClickListener(v -> {
                 presenter.onToDoClick(id);
             });
+            todoCheckBox.setOnClickListener(v -> {
+                presenter.onToDoCheckboxClick(id, isChecked);
+            });
+            todoCheckBox.setOnCheckedChangeListener((buttonView, checked) -> isChecked = checked);
         }
     }
 

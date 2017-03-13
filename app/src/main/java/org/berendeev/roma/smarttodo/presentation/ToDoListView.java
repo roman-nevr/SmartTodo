@@ -12,5 +12,7 @@ public interface ToDoListView {
     interface Router{
         void moveToToDoDetails(int id);
         void moveToAddNewToDo();
+        void showAddCategory();
+        void showRenameCategory(int categoryId);
     }
 }

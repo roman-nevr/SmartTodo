@@ -29,6 +29,10 @@ public class RepositoryImpl implements Repository {
         return sqLiteDatasource.updateToDo(toDo);
     }
 
+    @Override public Completable deleteToDo(ToDo toDo) {
+        return sqLiteDatasource.deleteToDo(toDo);
+    }
+
     @Override public Observable<ToDo> getTodo(int id) {
         return sqLiteDatasource.getTodo(id);
     }
@@ -43,6 +47,10 @@ public class RepositoryImpl implements Repository {
 
     @Override public Completable updateCategory(ToDoCategory category) {
         return sqLiteDatasource.updateCategory(category);
+    }
+
+    @Override public Completable deleteCategory(ToDoCategory category) {
+        return sqLiteDatasource.deleteCategory(category);
     }
 
     @Override public Observable<ToDoCategory> getCategory(int id) {

@@ -14,5 +14,6 @@
     <!--  -->
     <string name="cancel_button_label">Cancel</string>
     <string name="create_button_label">Create</string>
-    <string name="rename_button">Rename</string>
+    <string name="rename_button_label">Rename</string>
+    <string name="category_name_hint">Input category name</string>
 </resources>

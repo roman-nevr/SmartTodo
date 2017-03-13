@@ -13,11 +13,13 @@ import io.reactivex.Observable;
 public interface Repository {
     Completable saveToDo(ToDo toDo);
     Completable updateToDo(ToDo toDo);
+    Completable deleteToDo(ToDo toDo);
     Observable<ToDo> getTodo(int id);
     Observable<List<ToDo>> getAllFromCategory(int categoryId);
 
     Completable saveCategory(ToDoCategory category);
     Completable updateCategory(ToDoCategory category);
+    Completable deleteCategory(ToDoCategory category);
     Observable<ToDoCategory> getCategory(int id);
     Observable<List<ToDoCategory>> getAllCategories();
 

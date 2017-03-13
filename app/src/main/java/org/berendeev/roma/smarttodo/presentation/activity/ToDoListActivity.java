@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,11 +13,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
 
 import org.berendeev.roma.smarttodo.R;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
 import org.berendeev.roma.smarttodo.presentation.App;
+import org.berendeev.roma.smarttodo.presentation.dialog.CategoryDialog;
 import org.berendeev.roma.smarttodo.presentation.presenter.ToDoListPresenter;
 import org.berendeev.roma.smarttodo.presentation.ToDoListView;
 import org.berendeev.roma.smarttodo.presentation.adapter.ToDoListAdapter;
@@ -31,11 +35,12 @@ import butterknife.ButterKnife;
 
 public class ToDoListActivity extends AppCompatActivity implements ToDoListView, ToDoListView.Router {
 
+    public static final String CATEGORY = "category";
     @Inject ToDoListPresenter presenter;
 
     @BindView(R.id.no_todos) LinearLayout noToDos;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.add_todo_fab) FloatingActionButton addToDo;
+    @BindView(R.id.add_todo_fab) FloatingActionButton addToDoFAB;
 
     private ToDoListAdapter adapter;
 
@@ -48,9 +53,11 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
     private void initUI() {
         setContentView(R.layout.todo_list_layout);
         ButterKnife.bind(this);
-        addToDo.setOnClickListener(v -> {
+        addToDoFAB.setOnClickListener(v -> {
             presenter.onAddButtonClick();
         });
+        addToDoFAB.setScaleX(0);
+        addToDoFAB.setScaleY(0);
     }
 
     private void initDI() {
@@ -62,6 +69,16 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
         presenter.setView(this);
         presenter.setRouter(this);
         presenter.start();
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        showFAB();
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        hideFAB();
     }
 
     @Override protected void onStop() {
@@ -90,7 +107,7 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
 
     @Override public void showError() {
         recyclerView.setVisibility(View.INVISIBLE);
-        addToDo.setVisibility(View.GONE);
+        addToDoFAB.setVisibility(View.GONE);
         noToDos.setVisibility(View.VISIBLE);
         Snackbar.make(recyclerView, R.string.todo_list_loading_error, Snackbar.LENGTH_INDEFINITE).show();
     }
@@ -101,6 +118,16 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
 
     @Override public void moveToAddNewToDo() {
         ToDoDetailsActivity.start(this);
+    }
+
+    @Override public void showAddCategory() {
+        DialogFragment dialog =  CategoryDialog.getInstance(0);
+        dialog.show(getSupportFragmentManager(), CATEGORY);
+    }
+
+    @Override public void showRenameCategory(int categoryId) {
+        DialogFragment dialog =  CategoryDialog.getInstance(categoryId);
+        dialog.show(getSupportFragmentManager(), CATEGORY);
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -125,4 +152,14 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
         }
         return true;
     }
+
+    private void hideFAB(){
+        addToDoFAB.animate().setDuration(500).scaleX(0).scaleY(0);
+    }
+
+    private void showFAB(){
+        addToDoFAB.animate().setDuration(500).scaleX(1).scaleY(1).setInterpolator(new OvershootInterpolator());
+    }
+
+
 }

@@ -9,7 +9,9 @@
 
     <CheckBox
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/todo_checkbox"
+        />
 
     <TextView
         android:id="@+id/todo_name"

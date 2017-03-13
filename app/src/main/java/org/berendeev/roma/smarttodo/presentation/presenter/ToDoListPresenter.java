@@ -1,7 +1,12 @@
 package org.berendeev.roma.smarttodo.presentation.presenter;
 
+import android.os.AsyncTask;
+
 import org.berendeev.roma.smarttodo.domain.interactor.GetAllToDosWithoutCategory;
 import org.berendeev.roma.smarttodo.domain.interactor.GetToDoInteractor;
+import org.berendeev.roma.smarttodo.domain.interactor.SetCheckedToDoInteractor;
+import org.berendeev.roma.smarttodo.domain.interactor.UpdateToDoInteractor;
+import org.berendeev.roma.smarttodo.domain.interactor.VoidObserver;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
 import org.berendeev.roma.smarttodo.presentation.ToDoListView;
 
@@ -15,6 +20,7 @@ import io.reactivex.observers.DisposableObserver;
 public class ToDoListPresenter {
     @Inject GetToDoInteractor getToDoInteractor;
     @Inject GetAllToDosWithoutCategory getAllToDosWithoutCategory;
+    @Inject SetCheckedToDoInteractor setCheckedToDoInteractor;
     private final CompositeDisposable disposable;
 
     private ToDoListView view;
@@ -62,10 +68,18 @@ public class ToDoListPresenter {
     }
 
     public void onCreateCategoryClick() {
-
+        router.showAddCategory();
     }
 
     public void clearDoneTasks() {
 
+    }
+
+    public void onToDoCheckboxClick(int id, boolean isChecked) {
+        setCheckedToDoInteractor.execute(new VoidObserver(), buildToDoWithIdAndIsChecked(id, isChecked));
+    }
+
+    private ToDo buildToDoWithIdAndIsChecked(int id, boolean isChecked){
+        return ToDo.EMPTY.toBuilder().id(id).isChecked(isChecked).build();
     }
 }

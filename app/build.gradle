@@ -54,4 +54,7 @@ dependencies {
 
     //Timber
     compile 'com.jakewharton.timber:timber:4.5.1'
+
+    //Stetho
+    compile 'com.facebook.stetho:stetho:1.4.2'
 }

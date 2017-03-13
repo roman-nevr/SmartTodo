@@ -10,12 +10,13 @@ import android.provider.BaseColumns;
 public class DatabaseOpenHelper extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_NAME = "smarttodo.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String NAME = "name";
 
     public static final String TODOS_TABLE = "todos";
     public static final String TODO_DESCRIPTION = "description";
+    public static final String IS_CHECKED = "is_checked";
     public static final String CATEGORY_ID = "category_id";
 
     public static final String CATEGORIES_TABLE = "categories";
@@ -41,6 +42,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper implements BaseColumns 
                 BaseColumns._ID + " integer primary key autoincrement, " +
                 NAME + " text not null, " +
                 TODO_DESCRIPTION + " text, " +
+                IS_CHECKED + " integer not null, " +
                 CATEGORY_ID + " integer);";
         db.execSQL(script);
         String categoriesScript = "create table " + CATEGORIES_TABLE + " (" +
@@ -56,6 +58,13 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper implements BaseColumns 
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TODOS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE);
+        onCreate(db);
+    }
+
+    @Override public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        super.onDowngrade(db, oldVersion, newVersion);
         db.execSQL("DROP TABLE IF EXISTS " + TODOS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE);
         onCreate(db);

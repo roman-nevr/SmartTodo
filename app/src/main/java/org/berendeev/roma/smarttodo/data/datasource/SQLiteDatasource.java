@@ -20,6 +20,7 @@ import timber.log.Timber;
 import static android.provider.BaseColumns._ID;
 import static org.berendeev.roma.smarttodo.data.datasource.DatabaseOpenHelper.CATEGORIES_TABLE;
 import static org.berendeev.roma.smarttodo.data.datasource.DatabaseOpenHelper.CATEGORY_ID;
+import static org.berendeev.roma.smarttodo.data.datasource.DatabaseOpenHelper.IS_CHECKED;
 import static org.berendeev.roma.smarttodo.data.datasource.DatabaseOpenHelper.IS_EXPANDED;
 import static org.berendeev.roma.smarttodo.data.datasource.DatabaseOpenHelper.TODOS_TABLE;
 import static org.berendeev.roma.smarttodo.data.datasource.DatabaseOpenHelper.TODO_DESCRIPTION;
@@ -38,10 +39,7 @@ public class SQLiteDatasource implements Datasource {
     }
 
     @Override public Completable saveToDo(ToDo toDo) {
-        contentValues.clear();
-        contentValues.put(NAME, toDo.name());
-        contentValues.put(TODO_DESCRIPTION, toDo.description());
-        contentValues.put(CATEGORY_ID, toDo.categoryId());
+        fillContentValuesFromToDo(toDo);
         long rowId = database.insert(TODOS_TABLE, null, contentValues);
         if(rowId == -1){
             return Completable.error(new SQLException("can't save"));
@@ -50,16 +48,20 @@ public class SQLiteDatasource implements Datasource {
     }
 
     @Override public Completable updateToDo(ToDo toDo) {
-        contentValues.clear();
-        contentValues.put(NAME, toDo.name());
-        contentValues.put(TODO_DESCRIPTION, toDo.description());
-        contentValues.put(CATEGORY_ID, toDo.categoryId());
+        fillContentValuesFromToDo(toDo);
         String selection = _ID + " = ?";
         String[] selectionArgs = {"" + toDo.id()};
         int count = database.update(TODOS_TABLE, contentValues, selection, selectionArgs);
         if(count > 1){
             Timber.wtf("=======>  insert error, count > 1");
         }
+        return Completable.complete();
+    }
+
+    @Override public Completable deleteToDo(ToDo toDo) {
+        String selection = _ID + " = ? AND " + IS_CHECKED + " = ?";
+        String[] selectionArgs = {"" + toDo.id(), "" + getSQLIntegerFromBoolean(true)};
+        database.delete(TODOS_TABLE, selection, selectionArgs);
         return Completable.complete();
     }
 
@@ -110,6 +112,10 @@ public class SQLiteDatasource implements Datasource {
         return Completable.complete();
     }
 
+    @Override public Completable deleteCategory(ToDoCategory category) {
+        return null;
+    }
+
     @Override public Observable<ToDoCategory> getCategory(int id) {
         String selection = _ID + " = ?";
         String[] selectionArgs = {"" + id};
@@ -151,11 +157,13 @@ public class SQLiteDatasource implements Datasource {
         int idIndex = cursor.getColumnIndex(_ID);
         int nameIndex = cursor.getColumnIndex(NAME);
         int descriptionIndex = cursor.getColumnIndex(TODO_DESCRIPTION);
+        int isCheckedIndex = cursor.getColumnIndex(IS_CHECKED);
         int categoryIndex = cursor.getColumnIndex(CATEGORY_ID);
         return ToDo.builder()
                 .id(cursor.getInt(idIndex))
                 .name(cursor.getString(nameIndex))
                 .description(cursor.getString(descriptionIndex))
+                .isChecked(getBooleanFromSQLInteger(cursor.getInt(isCheckedIndex)))
                 .categoryId(cursor.getInt(categoryIndex))
                 .build();
     }
@@ -173,5 +181,17 @@ public class SQLiteDatasource implements Datasource {
 
     private boolean getBooleanFromSQLInteger(int anInt) {
         return anInt == 1;
+    }
+
+    private int getSQLIntegerFromBoolean(boolean bool){
+        return bool ? 1:0;
+    }
+
+    private void fillContentValuesFromToDo(ToDo toDo) {
+        contentValues.clear();
+        contentValues.put(NAME, toDo.name());
+        contentValues.put(TODO_DESCRIPTION, toDo.description());
+        contentValues.put(CATEGORY_ID, toDo.categoryId());
+        contentValues.put(IS_CHECKED, getSQLIntegerFromBoolean(toDo.isChecked()));
     }
 }

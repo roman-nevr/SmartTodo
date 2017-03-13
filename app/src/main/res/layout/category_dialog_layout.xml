@@ -20,8 +20,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:maxLines="1"
-            android:gravity="center"
             android:id="@+id/category_name"
+            android:hint="@string/category_name_hint"
             tools:text="Name"
             />
     </android.support.design.widget.TextInputLayout>
@@ -36,6 +36,7 @@
         android:layout_marginTop="22dp"
         android:layout_toLeftOf="@+id/divider"
         android:layout_toStartOf="@+id/divider"
+        style="?android:attr/borderlessButtonStyle"
         tools:text="@string/cancel_button_label"
         />
 
@@ -49,7 +50,9 @@
         android:layout_alignParentEnd="true"
         tools:text="@string/create_button_label"
         android:layout_toRightOf="@+id/divider"
-        android:layout_toEndOf="@+id/divider"/>
+        android:layout_toEndOf="@+id/divider"
+        style="?android:attr/borderlessButtonStyle"
+        />
 
     <TextView
         android:layout_width="wrap_content"

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 
 import org.berendeev.roma.smarttodo.R;
@@ -43,6 +44,7 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
     @Override protected void onStart() {
         super.onStart();
         presenter.setView(this);
+        presenter.setRouter(this);
         presenter.setTodoId(getIdFromIntent());
     }
 
@@ -94,5 +96,13 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
 
     @Override public void moveToToDoList() {
         finish();
+    }
+
+    private void hideFAB(){
+        doneFab.animate().setDuration(500).scaleX(0).scaleY(0);
+    }
+
+    private void showFAB(){
+        doneFab.animate().setDuration(500).scaleX(1).scaleY(1).setInterpolator(new OvershootInterpolator());
     }
 }
