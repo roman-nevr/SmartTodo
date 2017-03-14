@@ -10,6 +10,14 @@ public abstract class ToDoCategory {
 
     public abstract Builder toBuilder();
 
+    public static ToDoCategory create(int id, String name, boolean isExpanded) {
+        return builder()
+                .id(id)
+                .name(name)
+                .isExpanded(isExpanded)
+                .build();
+    }
+
     public static Builder builder() {
         return new AutoValue_ToDoCategory.Builder();
     }
@@ -24,4 +32,5 @@ public abstract class ToDoCategory {
 
         public abstract ToDoCategory build();
     }
+
 }

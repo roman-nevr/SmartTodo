@@ -7,14 +7,23 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import org.berendeev.roma.smarttodo.R;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
+import org.berendeev.roma.smarttodo.domain.model.ToDoCategory;
 import org.berendeev.roma.smarttodo.presentation.App;
+import org.berendeev.roma.smarttodo.presentation.adapter.CategorySpinnerAdapter;
 import org.berendeev.roma.smarttodo.presentation.presenter.ToDoDetailsPresenter;
 import org.berendeev.roma.smarttodo.presentation.ToDoDetailsView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -28,8 +37,11 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
     @BindView(R.id.todo_name) EditText etToDoName;
     @BindView(R.id.todo_description) EditText etToDoDescription;
     @BindView(R.id.complete_action_fab) FloatingActionButton doneFab;
+    @BindView(R.id.spinner) Spinner spinner;
 
     @Inject ToDoDetailsPresenter presenter;
+
+    private CategorySpinnerAdapter spinnerAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +58,7 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
         presenter.setView(this);
         presenter.setRouter(this);
         presenter.setTodoId(getIdFromIntent());
+        presenter.start();
     }
 
     @Override protected void onStop() {
@@ -59,6 +72,14 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
         doneFab.setOnClickListener(v -> {
             presenter.done();
         });
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                presenter.onCategorySelected(position);
+//            }
+//
+//            @Override public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
     }
 
     @Override public void fillView(ToDo toDo) {
@@ -76,6 +97,19 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
 
     @Override public String getDescription() {
         return etToDoDescription.getText().toString();
+    }
+
+    @Override public void setCategories(List<ToDoCategory> categories) {
+        spinnerAdapter = new CategorySpinnerAdapter(this, R.layout.spinner_simple_item, categories, getResources().getString(R.string.default_category_name));
+        spinner.setAdapter(spinnerAdapter);
+    }
+
+    @Override public void setCurrentCategory(ToDoCategory category) {
+        spinner.setSelection(spinnerAdapter.getPosition(category));
+    }
+
+    @Override public int getCurrentCategoryId() {
+        return (int)spinnerAdapter.getItemId(spinner.getSelectedItemPosition());
     }
 
     public static void start(Context context, int toDoId){

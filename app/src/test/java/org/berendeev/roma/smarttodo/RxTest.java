@@ -17,6 +17,7 @@ import io.reactivex.disposables.Disposables;
 import io.reactivex.functions.Cancellable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class RxTest {
     @Test
@@ -171,6 +172,44 @@ public class RxTest {
 
     private void doSmth() {
         int a = 0;
+    }
+
+    @Test
+    public void rxTest(){
+        Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                emitter.onNext(1);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    if(Thread.currentThread().isInterrupted()){
+                        Timber.d("interupted");
+                    }
+                }
+                if (emitter.isDisposed()){
+                    System.out.println("disposed");
+                }
+                emitter.onNext(2);
+            }
+        })
+        .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.computation());
+
+        Disposable disposable = observable.subscribe(integer -> {
+            System.out.println(integer);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        disposable.dispose();
+        try {
+            Thread.sleep(100000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

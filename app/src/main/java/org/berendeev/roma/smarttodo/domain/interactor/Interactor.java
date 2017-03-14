@@ -20,9 +20,9 @@ public abstract class Interactor<Response, Request> {
 
     public void execute(DisposableObserver<Response> observer, Request param) {
         Observable<Response> observable = buildObservable(param)
-                .subscribeOn(Schedulers.from(workExecutor))
+                .subscribeOn(Schedulers.io())
                 .observeOn(mainExecutor);
-        disposable.add(observable.subscribeWith(observer));
+        disposable.add (observable.subscribeWith(observer));
     }
 
     public void dispose(){

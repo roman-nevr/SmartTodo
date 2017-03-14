@@ -17,6 +17,8 @@ public class GetAllFromCategoryInteractor extends Interactor<List<ToDo>, Integer
     public GetAllFromCategoryInteractor() {}
 
     @Override protected Observable<List<ToDo>> buildObservable(Integer param) {
-        return repository.getAllFromCategory(param);
+        return Observable.create(e -> {
+            repository.getAllFromCategory(param);
+        });
     }
 }

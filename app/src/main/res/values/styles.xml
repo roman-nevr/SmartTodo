@@ -20,9 +20,31 @@
         <item name="android:maxLines">2</item>
     </style>
 
-    <style name="CategoryDialogButtonTheme" parent="?android:attr/borderlessButtonStyle">
+    <style name="CategoryDialogButtonTheme" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:textSize">25dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+    <style name="DialogStyle">
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingBottom">24dp</item>
+    </style>
+
+    <style name="SpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@android:drawable/spinner_background</item>
+    </style>
+
+    <style name="SpinnerItemStyle">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_regular_size</item>
     </style>
 
 </resources>

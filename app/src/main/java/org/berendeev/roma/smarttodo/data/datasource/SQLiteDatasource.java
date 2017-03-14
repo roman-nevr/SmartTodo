@@ -15,6 +15,8 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import timber.log.Timber;
 
 import static android.provider.BaseColumns._ID;
@@ -39,77 +41,98 @@ public class SQLiteDatasource implements Datasource {
     }
 
     @Override public Completable saveToDo(ToDo toDo) {
-        fillContentValuesFromToDo(toDo);
-        long rowId = database.insert(TODOS_TABLE, null, contentValues);
-        if(rowId == -1){
-            return Completable.error(new SQLException("can't save"));
-        }
-        return Completable.complete();
+        return Completable.create(e -> {
+            fillContentValuesFromToDo(toDo);
+            long rowId = database.insert(TODOS_TABLE, null, contentValues);
+            if (rowId == -1) {
+                Completable.error(new SQLException("can't save"));
+            }
+            Completable.complete();
+        });
+
     }
 
     @Override public Completable updateToDo(ToDo toDo) {
-        fillContentValuesFromToDo(toDo);
-        String selection = _ID + " = ?";
-        String[] selectionArgs = {"" + toDo.id()};
-        int count = database.update(TODOS_TABLE, contentValues, selection, selectionArgs);
-        if(count > 1){
-            Timber.wtf("=======>  insert error, count > 1");
-        }
-        return Completable.complete();
+        return Completable.create(emitter -> {
+            fillContentValuesFromToDo(toDo);
+            String selection = _ID + " = ?";
+            String[] selectionArgs = {"" + toDo.id()};
+            int count = database.update(TODOS_TABLE, contentValues, selection, selectionArgs);
+            if(count > 1){
+                Timber.wtf("=======>  insert error, count > 1");
+            }
+            if (!emitter.isDisposed()){
+                emitter.onComplete();
+            }
+        });
     }
 
     @Override public Completable deleteToDo(ToDo toDo) {
-        String selection = _ID + " = ? AND " + IS_CHECKED + " = ?";
-        String[] selectionArgs = {"" + toDo.id(), "" + getSQLIntegerFromBoolean(true)};
-        database.delete(TODOS_TABLE, selection, selectionArgs);
-        return Completable.complete();
+        return Completable.create(e -> {
+            String selection = _ID + " = ? AND " + IS_CHECKED + " = ?";
+            String[] selectionArgs = {"" + toDo.id(), "" + getSQLIntegerFromBoolean(true)};
+            database.delete(TODOS_TABLE, selection, selectionArgs);
+            Completable.complete();
+        });
     }
 
     @Override public Observable<ToDo> getTodo(int id) {
-        String selection = _ID + " = ?";
-        String[] selectionArgs = {"" + id};
-        Cursor cursor = database.query(TODOS_TABLE, null, selection, selectionArgs, null, null, null, null);
-        if(cursor.moveToFirst()){
-            return Observable.just(getToDoFromCursor(cursor));
-        }else {
-            //return Observable.error(new SQLException("read error or missing id"));
-            return Observable.empty();
-        }
+        return Observable.create(emitter -> {
+            String selection = _ID + " = ?";
+            String[] selectionArgs = {"" + id};
+            Cursor cursor = database.query(TODOS_TABLE, null, selection, selectionArgs, null, null, null, null);
+            if(cursor.moveToFirst()){
+                emitter.onNext(getToDoFromCursor(cursor));
+            }else {
+                //return Observable.error(new SQLException("read error or missing id"));
+                emitter.onComplete();
+            }
+        });
     }
 
     @Override public Observable<List<ToDo>> getAllFromCategory(int categoryId) {
-        List<ToDo> toDos = new ArrayList<>();
-        String selection = CATEGORY_ID + " = ?";
-        String[] selectionArgs = {"" + categoryId};
-        Cursor cursor = database.query(TODOS_TABLE, null, selection, selectionArgs, null, null, null, null);
-        while (cursor.moveToNext()){
-            toDos.add(getToDoFromCursor(cursor));
-        }
-        return Observable.just(toDos);
+        return Observable.create(emitter -> {
+            List<ToDo> toDos = new ArrayList<>();
+            String selection = CATEGORY_ID + " = ?";
+            String[] selectionArgs = {"" + categoryId};
+            Cursor cursor = database.query(TODOS_TABLE, null, selection, selectionArgs, null, null, null, null);
+            while (cursor.moveToNext()){
+                toDos.add(getToDoFromCursor(cursor));
+            }
+            if(!emitter.isDisposed()){
+                emitter.onNext(toDos);
+                emitter.onComplete();
+            }
+        });
+
     }
 
     @Override public Completable saveCategory(ToDoCategory category) {
-        contentValues.clear();
-        contentValues.put(NAME, category.name());
-        contentValues.put(IS_EXPANDED, category.isExpanded() ? 1 : 0);
-        long rowId = database.insert(CATEGORIES_TABLE, null, contentValues);
-        if(rowId == -1){
-            return Completable.error(new SQLException("can't save"));
-        }
-        return Completable.complete();
+        return Completable.create(e -> {
+            contentValues.clear();
+            contentValues.put(NAME, category.name());
+            contentValues.put(IS_EXPANDED, category.isExpanded() ? 1 : 0);
+            long rowId = database.insert(CATEGORIES_TABLE, null, contentValues);
+            if(rowId == -1){
+                e.onError(new SQLException("can't save"));
+            }
+            e.onComplete();
+        });
     }
 
     @Override public Completable updateCategory(ToDoCategory category) {
-        contentValues.clear();
-        contentValues.put(NAME, category.name());
-        contentValues.put(IS_EXPANDED, category.isExpanded());
-        String selection = _ID + " = ?";
-        String[] selectionArgs = {"" + category.id()};
-        int count = database.update(CATEGORIES_TABLE, contentValues, selection, selectionArgs);
-        if(count > 1){
-            Timber.wtf("=======>  insert error, count > 1");
-        }
-        return Completable.complete();
+        return Completable.create(e -> {
+            contentValues.clear();
+            contentValues.put(NAME, category.name());
+            contentValues.put(IS_EXPANDED, category.isExpanded());
+            String selection = _ID + " = ?";
+            String[] selectionArgs = {"" + category.id()};
+            int count = database.update(CATEGORIES_TABLE, contentValues, selection, selectionArgs);
+            if(count > 1){
+                Timber.wtf("=======>  insert error, count > 1");
+            }
+            e.onComplete();
+        });
     }
 
     @Override public Completable deleteCategory(ToDoCategory category) {
@@ -117,24 +140,28 @@ public class SQLiteDatasource implements Datasource {
     }
 
     @Override public Observable<ToDoCategory> getCategory(int id) {
-        String selection = _ID + " = ?";
-        String[] selectionArgs = {"" + id};
-        Cursor cursor = database.query(CATEGORIES_TABLE, null, selection, selectionArgs, null, null, null, null);
-        if(cursor.moveToFirst()){
-            return Observable.just(getCategoryFromCursor(cursor));
-        }else {
-            //return Observable.error(new SQLException("read error or missing id"));
-            return Observable.empty();
-        }
+        return Observable.create(emitter -> {
+            String selection = _ID + " = ?";
+            String[] selectionArgs = {"" + id};
+            Cursor cursor = database.query(CATEGORIES_TABLE, null, selection, selectionArgs, null, null, null, null);
+            if(cursor.moveToFirst()){
+                emitter.onNext(getCategoryFromCursor(cursor));
+            }else {
+                //return Observable.error(new SQLException("read error or missing id"));
+            }
+            emitter.onComplete();
+        });
     }
 
     @Override public Observable<List<ToDoCategory>> getAllCategories() {
-        List<ToDoCategory> categories = new ArrayList<>();
-        Cursor cursor = database.query(TODOS_TABLE, null, null, null, null, null, null, null);
-        while (cursor.moveToNext()){
-            categories.add(getCategoryFromCursor(cursor));
-        }
-        return Observable.just(categories);
+        return Observable.create(e -> {
+            List<ToDoCategory> categories = new ArrayList<>();
+            Cursor cursor = database.query(CATEGORIES_TABLE, null, null, null, null, null, null, null);
+            while (cursor.moveToNext()){
+                categories.add(getCategoryFromCursor(cursor));
+            }
+            e.onNext(categories);
+        });
     }
 
     @Override public Completable saveProduct(Product product) {

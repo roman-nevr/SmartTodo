@@ -15,6 +15,5 @@ public class VoidObserver extends DisposableObserver<Void> {
     }
 
     @Override public void onComplete() {
-
     }
 }

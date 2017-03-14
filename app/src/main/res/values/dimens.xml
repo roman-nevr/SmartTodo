@@ -9,4 +9,7 @@
     <dimen name="todo_head_padding">8dp</dimen>
     <dimen name="todo_padding">8dp</dimen>
     <dimen name="standard_padding_large">16dp</dimen>
+
+    <dimen name="text_medium_size">14sp</dimen>
+    <dimen name="text_regular_size">16sp</dimen>
 </resources>

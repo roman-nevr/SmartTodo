@@ -15,7 +15,6 @@ public class UpdateToDoInteractor extends Interactor<Void, ToDo> {
     public UpdateToDoInteractor() {}
 
     @Override protected Observable<Void> buildObservable(ToDo param) {
-        repository.updateToDo(param);
-        return Observable.empty();
+        return repository.updateToDo(param).toObservable();
     }
 }

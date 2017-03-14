@@ -32,23 +32,13 @@ public class ToDoListPresenter {
     }
 
     public void start(){
-        getAllToDosWithoutCategory.execute(new DisposableObserver<List<ToDo>>() {
-            @Override public void onNext(List<ToDo> toDos) {
-                view.showToDos(toDos);
-            }
-
-            @Override public void onError(Throwable e) {
-                view.showError();
-            }
-
-            @Override public void onComplete() {
-
-            }
-        }, null);
+        getAllToDosWithoutCategory.execute(new LoadToDosObserver(), null);
     }
 
     public void stop(){
         disposable.clear();
+        setCheckedToDoInteractor.dispose();
+        getAllToDosWithoutCategory.dispose();
     }
 
     public void onToDoClick(int id) {
@@ -81,5 +71,19 @@ public class ToDoListPresenter {
 
     private ToDo buildToDoWithIdAndIsChecked(int id, boolean isChecked){
         return ToDo.EMPTY.toBuilder().id(id).isChecked(isChecked).build();
+    }
+
+    private class LoadToDosObserver extends DisposableObserver<List<ToDo>> {
+        @Override public void onNext(List<ToDo> toDos) {
+            view.showToDos(toDos);
+        }
+
+        @Override public void onError(Throwable e) {
+            view.showError();
+        }
+
+        @Override public void onComplete() {
+
+        }
     }
 }

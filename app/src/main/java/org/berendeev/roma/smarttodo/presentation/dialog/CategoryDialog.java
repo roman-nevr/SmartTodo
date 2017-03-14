@@ -13,7 +13,7 @@ import org.berendeev.roma.smarttodo.presentation.App;
 
 import javax.inject.Inject;
 
-public class CategoryDialog extends DialogFragment {
+public class CategoryDialog extends DialogFragment implements CategoryDialogView {
 
     public static final String ID = "id";
     private int categoryId;
@@ -32,7 +32,7 @@ public class CategoryDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(form);
         Dialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
+//        dialog.setCanceledOnTouchOutside(false);
         return dialog;
     }
 
@@ -63,6 +63,7 @@ public class CategoryDialog extends DialogFragment {
 
     private void initDI(){
         App.getApplication().getMainComponent().plusCategoryDialog().inject(this);
+        presenter.setView(this);
     }
 
     private String getCancelLabel(){
@@ -85,4 +86,11 @@ public class CategoryDialog extends DialogFragment {
         return fragment;
     }
 
+    @Override public String getCategoryName() {
+        return categoryName.getText().toString();
+    }
+
+    @Override public void setCategoryName(String categoryName) {
+        this.categoryName.setText(categoryName);
+    }
 }

@@ -10,17 +10,15 @@ import io.reactivex.Observable;
 public class SetCheckedToDoInteractor extends Interactor<Void, ToDo> {
 
     @Inject Repository repository;
+    @Inject UpdateToDoInteractor updateToDoInteractor;
 
     @Inject
     public SetCheckedToDoInteractor() {}
 
     @Override protected Observable<Void> buildObservable(ToDo paramToDo) {
-        repository.getTodo(paramToDo.id()).subscribe(toDo -> {
-            repository.updateToDo(toDo.toBuilder()
-                    .isChecked(paramToDo.isChecked())
-                    .build());
-        });
-
-        return Observable.empty();
+        return repository.getTodo(paramToDo.id())
+                .flatMap(toDo -> repository.updateToDo(toDo).toObservable());
     }
+
+
 }

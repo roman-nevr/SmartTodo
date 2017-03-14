@@ -58,7 +58,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override public Observable<List<ToDoCategory>> getAllCategories() {
-        return null;
+        return sqLiteDatasource.getAllCategories();
     }
 
     @Override public Completable saveProduct(Product product) {
