@@ -22,6 +22,15 @@ public abstract class ToDoCategory {
                 .build();
     }
 
+    @Override public int hashCode() {
+        int h = 1;
+        h *= 1000003;
+        h ^= id();
+        h *= 1000003;
+        h ^= name().hashCode();
+        return h;
+    }
+
     public static Builder builder() {
         return new AutoValue_ToDoCategory.Builder();
     }

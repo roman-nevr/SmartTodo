@@ -14,6 +14,7 @@ import org.berendeev.roma.smarttodo.domain.model.ToDo;
 import org.berendeev.roma.smarttodo.domain.model.ToDoCategory;
 import org.berendeev.roma.smarttodo.presentation.presenter.ToDoListPresenter;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,37 +55,33 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private Object getItem(int position){
-
-        if (position == 0 && categories.get(0).toDos().size() == 0){
-            return categories.get(1);
-        }
+        Object result = null;
 
         if(position < categories.get(0).toDos().size()){
             return categories.get(0).toDos().get(position);
         }
 
-        position = position - categories.get(0).toDos().size();
-
         int categoryIndex = 1;
-        while (categoryIndex < categories.size()){
-            if (position == 0){
-                return categories.get(categoryIndex);
-            }
-            if (!categories.get(categoryIndex).isExpanded() || categories.get(categoryIndex).toDos().size() == 0){
-                position--;
-                categoryIndex++;
-            }else {
-                if (position < categories.get(categoryIndex).toDos().size() + 1){
-                    return categories.get(categoryIndex).toDos().get(position - 1);
+        int index = categories.get(0).toDos().size();
+
+        do {
+            ToDoCategory category = categories.get(categoryIndex);
+            //if item in current category
+            if (position < index + (category.isExpanded() ? category.toDos().size() + 1 : 1)){
+                if (position == index){
+                    return category;
                 }else {
-                    position = position - categories.get(0).toDos().size() - 1;
+                    return category.toDos().get(position - index - 1);
                 }
+            //else move to next category
+            }else {
+                index = index + (category.isExpanded() ? category.toDos().size() + 1 : 1);
+                categoryIndex++;
             }
-        }
-        if (BuildConfig.DEBUG){
-            throw new IllegalArgumentException();
-        }
-        return null;
+        }while (index <= position);
+
+
+        return result;
     }
 
     @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -147,19 +144,9 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             duration = 0;
         }
         arrow.animate().setDuration(duration).rotation(0);
-        int start = -1;
-        int begin = 0;
-        int count = 0;
-        for (ToDoCategory category : categories) {
-            start = start + (category.isExpanded() ? category.toDos().size() + 1 : 1);
-            if (category.id() == categoryId){
-                int index = categories.indexOf(category);
-                categories.set(index, category.toBuilder().isExpanded(false).build());
-                begin = start;
-                count = category.toDos().size();
-            }
-        }
-        notifyItemRangeInserted(begin, count);
+        int index = categories.indexOf(getCategory(categoryId));
+        categories.set(index, categories.get(index).toBuilder().isExpanded(false).build());
+        notifyItemRangeRemoved(categoryPosition(categoryId) + 1, getCategory(categoryId).toDos().size());
     }
 
     private void expand(View arrow, int categoryId, boolean immidiatly) {
@@ -168,19 +155,31 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             duration = 0;
         }
         arrow.animate().setDuration(duration).rotation(90);
-        int start = -1;
-        int begin = 0;
-        int end = 0;
+        int index = categories.indexOf(getCategory(categoryId));
+        categories.set(index, categories.get(index).toBuilder().isExpanded(true).build());
+        notifyItemRangeInserted(categoryPosition(categoryId) + 1, getCategory(categoryId).toDos().size());
+    }
+
+    private int categoryPosition(int categoryId){
+        int begin = -1;
+        Iterator<ToDoCategory> iterator = categories.iterator();
+        ToDoCategory category = iterator.next();
+        do{
+            begin = begin + (category.isExpanded() ? category.toDos().size() + 1 : 1);
+            category = iterator.next();
+        }while (categoryId != category.id());
+
+        return begin;
+    }
+
+    private ToDoCategory getCategory(int categoryId){
+        ToDoCategory toDoCategory = null;
         for (ToDoCategory category : categories) {
-            start = start + (category.isExpanded() ? category.toDos().size() + 1 : 1);
             if (category.id() == categoryId){
-                int index = categories.indexOf(category);
-                categories.set(index, category.toBuilder().isExpanded(true).build());
-                begin = start;
-                end = start + category.toDos().size();
+                toDoCategory = category;
             }
         }
-        notifyItemRangeInserted(begin, end);
+        return toDoCategory;
     }
 
     public class ToDoViewHolder extends RecyclerView.ViewHolder{

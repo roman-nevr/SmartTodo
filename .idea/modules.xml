@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SmartToDo.iml" filepath="$PROJECT_DIR$/SmartToDo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmartTodo.iml" filepath="$PROJECT_DIR$/SmartTodo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

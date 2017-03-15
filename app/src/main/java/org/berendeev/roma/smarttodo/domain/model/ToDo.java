@@ -15,6 +15,15 @@ public abstract class ToDo {
 
     public abstract Builder toBuilder();
 
+    @Override public int hashCode() {
+        int h = 1;
+        h *= 1000003;
+        h ^= id();
+        h *= 1000003;
+        h ^= name().hashCode();
+        return h;
+    }
+
     public static ToDo create(int id, String name, String description, boolean isChecked, int categoryId) {
         return builder()
                 .id(id)
