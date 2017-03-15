@@ -9,12 +9,12 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 
-public class GetToDoCategoriesInteractor extends Interactor<List<ToDoCategory>, Void> {
+public class GetAllToDoCategoriesInteractor extends Interactor<List<ToDoCategory>, Void> {
 
     @Inject Repository repository;
 
     @Inject
-    public GetToDoCategoriesInteractor() {}
+    public GetAllToDoCategoriesInteractor() {}
 
     @Override protected Observable<List<ToDoCategory>> buildObservable(Void param) {
         return repository.getAllCategories();

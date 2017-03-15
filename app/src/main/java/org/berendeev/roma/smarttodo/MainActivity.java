@@ -1,10 +1,13 @@
 package org.berendeev.roma.smarttodo;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,5 +66,28 @@ public class MainActivity extends AppCompatActivity {
         s.setAdapter(mSpinnerAdapter); // set the adapter
 //        s.setOnItemSelectedListener(myChangeListener); // (optional) reference to a OnItemSelectedListener, that you can use to perform actions based on user selection
         return true;
+    }
+
+    private class BNV extends BottomNavigationView{
+
+        public BNV(Context context) {
+            super(context);
+        }
+
+        public BNV(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        public BNV(Context context, AttributeSet attrs, int defStyleAttr) {
+            super(context, attrs, defStyleAttr);
+        }
+
+        @Override protected Parcelable onSaveInstanceState() {
+            return super.onSaveInstanceState();
+        }
+
+        @Override protected void onRestoreInstanceState(Parcelable state) {
+            super.onRestoreInstanceState(state);
+        }
     }
 }

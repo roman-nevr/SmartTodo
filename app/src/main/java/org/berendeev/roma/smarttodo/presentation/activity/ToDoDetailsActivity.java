@@ -55,6 +55,7 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
 
     @Override protected void onStart() {
         super.onStart();
+        showFAB();
         presenter.setView(this);
         presenter.setRouter(this);
         presenter.setTodoId(getIdFromIntent());
@@ -64,11 +65,13 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
     @Override protected void onStop() {
         super.onStop();
         presenter.stop();
+        hideFAB();
     }
 
     private void initUI() {
         setContentView(R.layout.todo_details);
         ButterKnife.bind(this);
+        doneFab.setSize(0);
         doneFab.setOnClickListener(v -> {
             presenter.done();
         });

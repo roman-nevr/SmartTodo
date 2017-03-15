@@ -17,7 +17,7 @@ public class SetCheckedToDoInteractor extends Interactor<Void, ToDo> {
 
     @Override protected Observable<Void> buildObservable(ToDo paramToDo) {
         return repository.getTodo(paramToDo.id())
-                .flatMap(toDo -> repository.updateToDo(toDo).toObservable());
+                .flatMap(toDo -> repository.updateToDo(toDo.toBuilder().isChecked(paramToDo.isChecked()).build()).toObservable());
     }
 
 

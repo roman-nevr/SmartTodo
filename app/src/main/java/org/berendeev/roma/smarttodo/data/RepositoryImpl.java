@@ -41,6 +41,10 @@ public class RepositoryImpl implements Repository {
         return sqLiteDatasource.getAllFromCategory(categoryId);
     }
 
+    @Override public Observable<List<ToDo>> getAllToDos() {
+        return sqLiteDatasource.getAllToDos();
+    }
+
     @Override public Completable saveCategory(ToDoCategory category) {
         return sqLiteDatasource.saveCategory(category);
     }
@@ -54,7 +58,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override public Observable<ToDoCategory> getCategory(int id) {
-        return null;
+        return sqLiteDatasource.getCategory(id);
     }
 
     @Override public Observable<List<ToDoCategory>> getAllCategories() {

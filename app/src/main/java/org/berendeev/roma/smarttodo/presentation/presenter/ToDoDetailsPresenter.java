@@ -1,8 +1,9 @@
 package org.berendeev.roma.smarttodo.presentation.presenter;
 
-import org.berendeev.roma.smarttodo.domain.interactor.GetToDoCategoriesInteractor;
+import org.berendeev.roma.smarttodo.domain.interactor.GetAllToDoCategoriesInteractor;
 import org.berendeev.roma.smarttodo.domain.interactor.GetToDoInteractor;
 import org.berendeev.roma.smarttodo.domain.interactor.SaveTodoInteractor;
+import org.berendeev.roma.smarttodo.domain.interactor.UpdateToDoInteractor;
 import org.berendeev.roma.smarttodo.domain.interactor.VoidObserver;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
 import org.berendeev.roma.smarttodo.domain.model.ToDoCategory;
@@ -18,38 +19,36 @@ import io.reactivex.observers.DisposableObserver;
 public class ToDoDetailsPresenter {
     @Inject GetToDoInteractor getToDoInteractor;
     @Inject SaveTodoInteractor saveTodoInteractor;
-    @Inject GetToDoCategoriesInteractor getToDoCategoriesInteractor;
+    @Inject GetAllToDoCategoriesInteractor getAllToDoCategoriesInteractor;
+    @Inject UpdateToDoInteractor updateToDoInteractor;
 
     public static final int NEW_TODO = -1;
 
     private ToDoDetailsView view;
     private ToDoDetailsView.Router router;
     private int todoId;
-    private final CompositeDisposable disposable;
 
     @Inject
     public ToDoDetailsPresenter() {
-        disposable = new CompositeDisposable();
     }
 
     public void start(){
-        getToDoCategoriesInteractor.execute(new GetToDoCategoriesObservable(), null);
+        getAllToDoCategoriesInteractor.execute(new GetToDoCategoriesObserver(), null);
+        if (todoId != NEW_TODO){
+            getToDoInteractor.execute(new GetToDoObserver(), todoId);
+        }
     }
 
     public void stop(){
-        disposable.clear();
     }
 
     public void done() {
         //TODO: done action
-        ToDo toDo = ToDo.builder()
-                .name(view.getName())
-                .description(view.getDescription())
-                .categoryId(view.getCurrentCategoryId())
-                .id(0)
-                .isChecked(false)
-                .build();
-        saveTodoInteractor.execute(new VoidObserver(), toDo);
+        if (todoId == NEW_TODO){
+            saveTodoInteractor.execute(new VoidObserver(), buildToDo());
+        }else {
+            updateToDoInteractor.execute(new VoidObserver(), buildToDo());
+        }
         router.moveToToDoList();
     }
 
@@ -65,25 +64,7 @@ public class ToDoDetailsPresenter {
         this.router = router;
     }
 
-    private class GetToDoObservable extends DisposableObserver<ToDo>{
-        @Override public void onNext(ToDo toDo) {
-            view.fillView(toDo);
-            view.setCurrentCategory(ToDoCategory.create(toDo.categoryId(), "", false));
-        }
-
-        @Override public void onError(Throwable e) {
-            view.showError();
-        }
-
-        @Override public void onComplete() {
-            getToDoCategoriesInteractor.dispose();
-            if (todoId != NEW_TODO){
-                getToDoInteractor.execute(new GetToDoObservable(), todoId);
-            }
-        }
-    }
-
-    private class GetToDoCategoriesObservable extends DisposableObserver<List<ToDoCategory>>{
+    private class GetToDoCategoriesObserver extends DisposableObserver<List<ToDoCategory>>{
         @Override public void onNext(List<ToDoCategory> categories) {
             view.setCategories(categories);
         }
@@ -95,5 +76,30 @@ public class ToDoDetailsPresenter {
         @Override public void onComplete() {
             this.dispose();
         }
+    }
+
+    private class GetToDoObserver extends DisposableObserver<ToDo>{
+
+        @Override public void onNext(ToDo toDo) {
+            view.fillView(toDo);
+        }
+
+        @Override public void onError(Throwable e) {
+
+        }
+
+        @Override public void onComplete() {
+            this.dispose();
+        }
+    }
+
+    private ToDo buildToDo(){
+        return ToDo.builder()
+                .name(view.getName())
+                .description(view.getDescription())
+                .categoryId(view.getCurrentCategoryId())
+                .id(0)
+                .isChecked(false)
+                .build();
     }
 }

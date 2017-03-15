@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 
 import org.berendeev.roma.smarttodo.R;
 import org.berendeev.roma.smarttodo.domain.model.ToDo;
+import org.berendeev.roma.smarttodo.domain.model.ToDoCategory;
 import org.berendeev.roma.smarttodo.presentation.App;
 import org.berendeev.roma.smarttodo.presentation.dialog.CategoryDialog;
 import org.berendeev.roma.smarttodo.presentation.presenter.ToDoListPresenter;
@@ -33,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ToDoListActivity extends AppCompatActivity implements ToDoListView, ToDoListView.Router {
+public class ToDoListActivity extends AppCompatActivity implements ToDoListView, ToDoListView.Router, ToDoListView.DialogListener {
 
     public static final String CATEGORY = "category";
     @Inject ToDoListPresenter presenter;
@@ -86,14 +87,14 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
         presenter.stop();
     }
 
-    @Override public void showToDos(List<ToDo> toDos) {
-        if(toDos.isEmpty()){
+    @Override public void showToDoList(List<ToDoCategory> categories) {
+        if(categories.size() == 1 && categories.get(0).toDos().isEmpty()){
             noToDos.setVisibility(View.VISIBLE);
         }else {
             noToDos.setVisibility(View.GONE);
         }
         if (adapter == null){
-            adapter = new ToDoListAdapter(presenter, toDos);
+            adapter = new ToDoListAdapter(presenter, categories);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                     layoutManager.getOrientation());
@@ -101,7 +102,7 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
         }else {
-            adapter.update(toDos);
+            adapter.update(categories);
         }
     }
 
@@ -162,4 +163,7 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView,
     }
 
 
+    @Override public void onDialogComplete() {
+        presenter.onCategoryDialogComplete();
+    }
 }

@@ -26,14 +26,8 @@ public class CategorySpinnerAdapter extends ArrayAdapter {
         this.resourceId = resourceId;
         this.categories = categories;
         this.defaultName = defaultName;
-        setDefaultCategoryName();
     }
 
-    private void setDefaultCategoryName() {
-        int index = categories.indexOf(ToDoCategory.create(0,"default",true));
-        ToDoCategory category = categories.get(index).toBuilder().name(defaultName).build();
-        categories.set(index, category);
-    }
 
     @NonNull @Override public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
@@ -46,7 +40,6 @@ public class CategorySpinnerAdapter extends ArrayAdapter {
 
     public void setCategories(List<ToDoCategory> categories) {
         this.categories = categories;
-        setDefaultCategoryName();
         notifyDataSetChanged();
     }
 

@@ -16,6 +16,7 @@ public interface Repository {
     Completable deleteToDo(ToDo toDo);
     Observable<ToDo> getTodo(int id);
     Observable<List<ToDo>> getAllFromCategory(int categoryId);
+    Observable<List<ToDo>> getAllToDos();
 
     Completable saveCategory(ToDoCategory category);
     Completable updateCategory(ToDoCategory category);
