@@ -51,6 +51,16 @@ public class CategorySpinnerAdapter extends ArrayAdapter {
         return categories.indexOf(item);
     }
 
+    public int getPositionByCategoryId(int categoryId){
+        int result = 0;
+        for (int index = 0; index < categories.size(); index++) {
+            if (categories.get(index).id() == categoryId){
+                result = index;
+            }
+        }
+        return result;
+    }
+
     @Override public boolean hasStableIds() {
         return true;
     }

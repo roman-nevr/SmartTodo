@@ -75,19 +75,12 @@ public class ToDoDetailsActivity extends AppCompatActivity implements ToDoDetail
         doneFab.setOnClickListener(v -> {
             presenter.done();
         });
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                presenter.onCategorySelected(position);
-//            }
-//
-//            @Override public void onNothingSelected(AdapterView<?> parent) {
-//            }
-//        });
     }
 
     @Override public void fillView(ToDo toDo) {
         etToDoName.setText(toDo.name());
         etToDoDescription.setText(toDo.description());
+        spinner.setSelection(spinnerAdapter.getPositionByCategoryId(toDo.categoryId()));
     }
 
     @Override public void showError() {

@@ -47,7 +47,7 @@ public class ToDoDetailsPresenter {
         if (todoId == NEW_TODO){
             saveTodoInteractor.execute(new VoidObserver(), buildToDo());
         }else {
-            updateToDoInteractor.execute(new VoidObserver(), buildToDo());
+            updateToDoInteractor.execute(new VoidObserver(), buildToDo(todoId));
         }
         router.moveToToDoList();
     }
@@ -93,13 +93,17 @@ public class ToDoDetailsPresenter {
         }
     }
 
-    private ToDo buildToDo(){
+    private ToDo buildToDo(int todoId){
         return ToDo.builder()
                 .name(view.getName())
                 .description(view.getDescription())
                 .categoryId(view.getCurrentCategoryId())
-                .id(0)
+                .id(todoId)
                 .isChecked(false)
                 .build();
+    }
+
+    private ToDo buildToDo(){
+        return buildToDo(0);
     }
 }
